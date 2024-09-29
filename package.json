@@ -1,5 +1,5 @@
 {
-  "name": "react-native-pure-funnel",
+  "name": "@pureboard/react-native-pure-funnel",
   "version": "0.1.0",
   "description": "easy handling funnel in react native",
   "source": "./src/index.tsx",
