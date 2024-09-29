@@ -19,7 +19,7 @@ const steps = ['A', 'B', 'C'] as const;
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const { funnelNavigation } = useFunnel<typeof steps>(steps, {
+  const { funnelNavigation } = useFunnel(steps, {
     goBackAction: navigation.goBack,
   });
   const headerHeight = useHeaderHeight();
