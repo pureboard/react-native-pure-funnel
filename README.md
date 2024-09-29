@@ -70,6 +70,55 @@ export const FunnelScreen = withFunnel(() => {
 });
 ```
 
+## API Reference
+### initFunnel
+`(steps: Steps, options?: FunnelOptions<Steps>)=>void`
+
+Initializes the funnel with the specified steps.
+(The Funnel is not rendered on the screen until the initialization code is called.)
+
+`steps`: An array of steps that represent the funnel stages.   
+`options (optional)`: Configuration for the funnel:   
+- initialStep: The step or steps to start the funnel from.   
+- goBackAction: This is executed when the length of the funnelStack is 1 or less, and no more funnels can be popped.
+
+### Funnel Navigation API
+The funnelNavigation object contains methods for controlling the funnel navigation flow:
+
+`FunnelNavigationOptions: {animated?:boolean}`:   Whether the transition should be animated.
+
+#### goBack
+`(navigateOptions?: FunnelNavigationOptions)=>void`: Navigate back to the previous step.
+
+#### goForward
+`(navigateOptions?: FunnelNavigationOptions)=>`: Move to the next step.
+
+#### reset
+`(stack?: Steps[], navigateOptions?: FunnelNavigationOptions)=>void`: You can customize the funnelStack to the desired form. If no stack is passed, it will reset to the default initial value.
+
+#### navigate
+`(step: Step, navigateOptions?: FunnelNavigationOptions)=>void`: Navigate to a specific step.
+
+#### replace
+`(step: Step, navigateOptions?: FunnelNavigationOptions)`: Replace the current step with a new one.
+
+####
+setOptions(options: Partial<FunnelOptions<Steps>>): Update funnel options dynamically.
+
+## Funnel Component
+The Funnel component is used to manage step-based navigation flows, allowing users to navigate through predefined steps in a funnel. This component provides additional configuration options for handling gestures and screen dimensions, particularly on iOS devices.
+
+### gestureEnabled (iOS only)
+`Type`: boolean
+`Default`: true
+`Description`: Determines whether it's possible to trigger funnel back navigation using swipe gestures. This is an iOS-only feature.
+`Usage`: When set to true, users can swipe to go back within the funnel if a previous step exists. If set to false, swipe gestures will be disabled.
+
+### extraHeight
+`Type`: number
+`Default`: 0
+`Description`: Specifies additional height to be added to the funnel’s viewport. This can be useful when using react-navigation's stack navigator because each funnel step has the default dimensions of the `viewport’s screenWidth and screenHeight. you can pass headerHeight to extraHeight.
+
 
 ## Contributing
 
