@@ -15,8 +15,8 @@ export const PureFunnel = () => {
     <CoreFunnel<typeof steps>
       stack={funnelStack}
       goBack={goBack}
-      gestureEnabled
       transitionInterface={transitionInterface}
+      gestureEnabled
     >
       <FunnelStep name={'A'} onFocused={() => console.log('A')}>
         <FunnelContent
