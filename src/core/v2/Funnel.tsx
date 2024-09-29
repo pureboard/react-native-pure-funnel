@@ -18,14 +18,13 @@ import { useFunnelContext } from './withFunnel';
 
 export interface FunnelProps<Steps extends NonEmptyArray<string>> {
   gestureEnabled?: boolean; // only iOS. default is true
-
   children:
     | Array<ReactElement<StepProps<Steps>>>
     | ReactElement<StepProps<Steps>>;
   headerHeight?: number;
 }
 
-export const CoreFunnel = <Steps extends NonEmptyArray<string>>({
+export const Funnel = <Steps extends NonEmptyArray<string>>({
   children,
   gestureEnabled: _gestureEnabled = true,
   headerHeight = 0,
@@ -88,11 +87,6 @@ export const CoreFunnel = <Steps extends NonEmptyArray<string>>({
       prevStack.current = funnelStack;
     }
   }, [funnelStack === null]);
-
-  // initiation 이전까지 화면에 노출하지 않음.
-  if (!funnelStack) {
-    return null;
-  }
 
   return (
     <SwipeDetector

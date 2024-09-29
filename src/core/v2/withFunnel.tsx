@@ -276,9 +276,7 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
     if (funnelStack) {
       navigation.setOptions({
         headerLeft: () =>
-          funnelStack.length > 1 ||
-          navigation.canGoBack() ||
-          funnelOptions?.goBackAction ? (
+          funnelStack.length > 1 || funnelOptions?.goBackAction ? (
             <HeaderBackButton onPress={funnelNavigation.goBack} />
           ) : null,
       });
