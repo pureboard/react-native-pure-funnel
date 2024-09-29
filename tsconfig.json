@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "paths": {
-      "react-native-pure-funnel": ["./src/index"]
+      "@pureboard/react-native-pure-funnel": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

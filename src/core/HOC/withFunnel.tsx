@@ -2,7 +2,6 @@ import React, {
   type ComponentType,
   forwardRef,
   useContext,
-  useLayoutEffect,
   useState,
 } from 'react';
 import type { NonEmptyArray } from '../types/NonEmptyArray';
@@ -13,10 +12,6 @@ import {
   useAnimatedValue,
   useWindowDimensions,
 } from 'react-native';
-import { useBackHandler } from '../hooks/utils/useBackHandler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { HeaderBackButton } from '@react-navigation/elements';
-import { usePreservedCallback } from '../hooks/utils/usePreservedCallback';
 
 export const funnelSlideAnimationDuration = 250;
 
@@ -76,8 +71,6 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
 }: {
   children: React.ReactNode;
 }) => {
-  const isFocused = useIsFocused();
-  const navigation = useNavigation();
   const { width: screenWidth } = useWindowDimensions();
 
   type Step = ArrayElement<Steps>;
@@ -155,33 +148,31 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
     });
   };
 
-  const goBack = usePreservedCallback(
-    (navigateOptions?: FunnelNavigationOptions) => {
-      if (!funnelStack) {
+  const goBack = (navigateOptions?: FunnelNavigationOptions) => {
+    if (!funnelStack) {
+      return false;
+    }
+    if (funnelStack.length < 2) {
+      if (funnelOptions.goBackAction) {
+        funnelOptions.goBackAction();
+        return true;
+      } else {
         return false;
       }
-      if (funnelStack.length < 2) {
-        if (funnelOptions.goBackAction) {
-          funnelOptions.goBackAction();
-          return true;
-        } else {
-          return false;
-        }
-      }
+    }
 
-      if (navigateOptions?.animated ?? true) {
-        slideOutAnimation.start(() => {
-          slideAnimation.setValue(0);
-          popStack();
-        });
-        return true;
-      }
-
-      Keyboard.dismiss();
-      popStack();
+    if (navigateOptions?.animated ?? true) {
+      slideOutAnimation.start(() => {
+        slideAnimation.setValue(0);
+        popStack();
+      });
       return true;
     }
-  );
+
+    Keyboard.dismiss();
+    popStack();
+    return true;
+  };
 
   const moveStep = (step: Step, navigateOptions?: FunnelNavigationOptions) => {
     Keyboard.dismiss();
@@ -263,19 +254,6 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
     transitionInterface,
     funnelOptions,
   };
-
-  useBackHandler({ onPressBackButton: goBack, isFocused });
-
-  useLayoutEffect(() => {
-    if (funnelStack) {
-      navigation.setOptions({
-        headerLeft: () =>
-          funnelStack.length > 1 || funnelOptions?.goBackAction ? (
-            <HeaderBackButton onPress={funnelNavigation.goBack} />
-          ) : null,
-      });
-    }
-  }, [funnelStack?.length, navigation]);
 
   return (
     <FunnelContext.Provider value={contextValue}>

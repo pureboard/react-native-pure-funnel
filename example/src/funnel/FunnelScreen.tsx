@@ -1,14 +1,20 @@
-import { Funnel, FunnelStep, withFunnel } from 'react-native-pure-funnel';
+import {
+  Funnel,
+  FunnelStep,
+  withFunnel,
+} from '@pureboard/react-native-pure-funnel';
 import { FunnelContent } from '../components/FunnelContent';
 import { useFunnelContext } from '../../../src/core/HOC/withFunnel';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 const steps = ['A', 'B', 'C'] as const;
 
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
   const { initFunnel, funnelNavigation } = useFunnelContext<typeof steps>();
+  const headerHeight = useHeaderHeight();
 
   useEffect(() => {
     initFunnel(steps, {
@@ -17,7 +23,7 @@ export const FunnelScreen = withFunnel(() => {
   }, []);
 
   return (
-    <Funnel<typeof steps>>
+    <Funnel<typeof steps> extraHeight={headerHeight}>
       <FunnelStep name={'A'} onFocused={() => console.log('A')}>
         <FunnelContent
           backgroundColor={'red'}

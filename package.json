@@ -89,10 +89,6 @@
     "react": "*",
     "react-native": "*"
   },
-  "dependencies": {
-    "@react-navigation/native": "*",
-    "@react-navigation/native-stack": "*"
-  },
   "workspaces": [
     "example"
   ],

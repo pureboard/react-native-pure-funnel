@@ -16,8 +16,6 @@ import { SwipeDetector } from './SwipeDetector';
 import { FunnelStepProvider } from './FunnelStepProvider';
 import { useFunnelContext } from '../HOC/withFunnel';
 import { isIOS } from '../utils/platform';
-import { useNavigation } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 export interface FunnelProps<Steps extends NonEmptyArray<string>> {
   /**
@@ -29,7 +27,7 @@ export interface FunnelProps<Steps extends NonEmptyArray<string>> {
    * only iOS. swipeEnabled in react-navigation. Used to determine whether to call navigation.goBack with a swipe when there is no further funnel to navigate back to.
    * @default true
    */
-  initialGestureEnabled?: boolean;
+
   children:
     | Array<ReactElement<StepProps<Steps>>>
     | ReactElement<StepProps<Steps>>;
@@ -39,11 +37,8 @@ export interface FunnelProps<Steps extends NonEmptyArray<string>> {
 export const Funnel = <Steps extends NonEmptyArray<string>>({
   children,
   gestureEnabled: _gestureEnabled = true,
-  initialGestureEnabled = true,
   extraHeight = 0,
 }: FunnelProps<Steps>) => {
-  const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
   const validChildren = Children.toArray(children).filter(
     isValidElement
   ) as Array<ReactElement<StepProps<Steps>>>;
@@ -92,7 +87,7 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
   }
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const contentViewHeight = screenHeight - headerHeight - extraHeight;
+  const contentViewHeight = screenHeight - extraHeight;
 
   const prevFunnelSlideAnimation =
     transitionInterface?.slideAnimation?.interpolate({
@@ -105,15 +100,6 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
       prevStack.current = funnelStack;
     }
   }, [funnelStack === null]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      gestureEnabled:
-        (funnelStack || []).length <= 1
-          ? initialGestureEnabled
-          : !gestureEnabled, // the opposite of SwipeDetector gestureEnabled
-    });
-  }, [gestureEnabled]);
 
   return (
     <SwipeDetector
