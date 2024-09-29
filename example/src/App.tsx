@@ -1,17 +1,21 @@
-import { useState, useEffect } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-pure-funnel';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { PureFunnel } from './funnel/PureFunnel';
+import { useState } from 'react';
+import { FunnelNavigator } from './funnel/navigationFunnel/FunnelNavigator';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
-
-  useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+  const [funnelType, setFunnelType] = useState<'pure' | 'navigation'>('pure');
+  const counterFunnelType = funnelType === 'pure' ? 'navigation' : 'pure';
+  const switchFunnelType = () => {
+    setFunnelType(counterFunnelType);
+  };
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      {funnelType === 'pure' ? <PureFunnel /> : <FunnelNavigator />}
+      <TouchableOpacity style={styles.switch} onPress={switchFunnelType}>
+        <Text>Switch to {counterFunnelType} funnel</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -19,12 +23,13 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
+  switch: {
+    position: 'absolute',
+    bottom: 60,
+    alignSelf: 'center',
+    borderRadius: 30,
+    padding: 12,
+    backgroundColor: 'white',
   },
 });

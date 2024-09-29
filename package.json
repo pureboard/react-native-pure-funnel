@@ -89,6 +89,10 @@
     "react": "*",
     "react-native": "*"
   },
+  "dependencies": {
+    "@react-navigation/native": "^6.1.18",
+    "@react-navigation/native-stack": "^6.11.0"
+  },
   "workspaces": [
     "example"
   ],
@@ -130,6 +134,7 @@
     ],
     "rules": {
       "react/react-in-jsx-scope": "off",
+      "react-hooks/exhaustive-deps": "off",
       "prettier/prettier": [
         "error",
         {
