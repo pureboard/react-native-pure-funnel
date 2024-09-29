@@ -62,7 +62,7 @@ interface FunnelContext<Steps extends NonEmptyArray<string>> {
 }
 
 const FunnelContext = React.createContext<FunnelContext<any> | null>(null);
-export const useFunnelContext = <Steps extends NonEmptyArray<string>>() => {
+export const useFunnel = <Steps extends NonEmptyArray<string>>() => {
   return useContext(FunnelContext) as FunnelContext<Steps>;
 };
 

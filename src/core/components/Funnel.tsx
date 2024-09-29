@@ -14,7 +14,7 @@ import type { NonEmptyArray } from '../types/NonEmptyArray';
 import type { StepProps } from './FunnelStep';
 import { SwipeDetector } from './SwipeDetector';
 import { FunnelStepProvider } from './FunnelStepProvider';
-import { useFunnelContext } from '../HOC/withFunnel';
+import { useFunnel } from '../HOC/withFunnel';
 import { isIOS } from '../utils/platform';
 
 export interface FunnelProps<Steps extends NonEmptyArray<string>> {
@@ -44,7 +44,7 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
   ) as Array<ReactElement<StepProps<Steps>>>;
 
   const { transitionInterface, funnelStack, funnelNavigation } =
-    useFunnelContext<Steps>();
+    useFunnel<Steps>();
 
   const gestureEnabled =
     isIOS && _gestureEnabled && (funnelStack ? funnelStack.length > 1 : true);

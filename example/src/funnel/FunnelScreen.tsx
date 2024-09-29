@@ -4,7 +4,7 @@ import {
   withFunnel,
 } from '@pureboard/react-native-pure-funnel';
 import { FunnelContent } from '../components/FunnelContent';
-import { useFunnelContext } from '../../../src/core/HOC/withFunnel';
+import { useFunnel } from '../../../src/core/HOC/withFunnel';
 import { useEffect } from 'react';
 import {
   useFocusEffect,
@@ -20,7 +20,7 @@ const steps = ['A', 'B', 'C'] as const;
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const { initFunnel, funnelNavigation } = useFunnelContext<typeof steps>();
+  const { initFunnel, funnelNavigation } = useFunnel<typeof steps>();
   const headerHeight = useHeaderHeight();
 
   useEffect(() => {
