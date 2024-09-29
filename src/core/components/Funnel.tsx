@@ -23,11 +23,6 @@ export interface FunnelProps<Steps extends NonEmptyArray<string>> {
    * @default true
    */
   gestureEnabled?: boolean; // only iOS. default is true
-  /**
-   * only iOS. swipeEnabled in react-navigation. Used to determine whether to call navigation.goBack with a swipe when there is no further funnel to navigate back to.
-   * @default true
-   */
-
   children:
     | Array<ReactElement<StepProps<Steps>>>
     | ReactElement<StepProps<Steps>>;
