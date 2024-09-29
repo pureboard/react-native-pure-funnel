@@ -93,7 +93,7 @@ The list of funnel steps.
 #### funnelStack: `ArrayElement<Steps>[] | null`
 The current stack of visited funnel steps.
 
-### funnelOptions: `FunnelOptions<ArrayElement<Steps>>`
+#### funnelOptions: `FunnelOptions<ArrayElement<Steps>>`
 The current funnel options.
 
 #### funnelNavigation
