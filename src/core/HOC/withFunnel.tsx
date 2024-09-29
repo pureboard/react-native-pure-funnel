@@ -39,7 +39,9 @@ interface FunnelContext<Steps extends NonEmptyArray<string>> {
   };
   funnelSteps: Steps | null;
   funnelStack: ArrayElement<Steps>[] | null;
-  funnelOptions?: FunnelOptions<Steps>;
+  funnelOptions?: FunnelOptions<
+    ArrayElement<Steps> extends string ? ArrayElement<Steps> : any
+  >;
   funnelNavigation: {
     setOptions: (
       options: Partial<
