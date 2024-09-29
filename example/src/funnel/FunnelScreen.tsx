@@ -1,30 +1,30 @@
-import {
-  CoreFunnel,
-  FunnelStep,
-  useCoreFunnel,
-} from 'react-native-pure-funnel';
+import { Funnel, FunnelStep, withFunnel } from 'react-native-pure-funnel';
 import { FunnelContent } from '../components/FunnelContent';
+import { useFunnelContext } from '../../../src/core/HOC/withFunnel';
+import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const steps = ['A', 'B', 'C'] as const;
 
-export const PureFunnel = () => {
-  const [funnelStack, { navigate, goBack }, transitionInterface] =
-    useCoreFunnel(steps);
+export const FunnelScreen = withFunnel(() => {
+  const navigation = useNavigation();
+  const { initFunnel, funnelNavigation } = useFunnelContext<typeof steps>();
+
+  useEffect(() => {
+    initFunnel(steps, {
+      goBackAction: navigation.goBack,
+    });
+  }, []);
 
   return (
-    <CoreFunnel<typeof steps>
-      stack={funnelStack}
-      goBack={goBack}
-      transitionInterface={transitionInterface}
-      gestureEnabled
-    >
+    <Funnel<typeof steps>>
       <FunnelStep name={'A'} onFocused={() => console.log('A')}>
         <FunnelContent
           backgroundColor={'red'}
           name={'A'}
           prev={''}
           next={'B'}
-          goToNext={() => navigate('B')}
+          goToNext={() => funnelNavigation.navigate('B')}
         />
       </FunnelStep>
       <FunnelStep name={'B'} onFocused={() => console.log('B')}>
@@ -33,7 +33,7 @@ export const PureFunnel = () => {
           name={'B'}
           prev={'A'}
           next={'C'}
-          goToNext={() => navigate('C')}
+          goToNext={() => funnelNavigation.navigate('C')}
         />
       </FunnelStep>
       <FunnelStep name={'C'} onFocused={() => console.log('C')}>
@@ -42,9 +42,9 @@ export const PureFunnel = () => {
           name={'C'}
           prev={'B'}
           next={'A'}
-          goToNext={() => navigate('A')}
+          goToNext={() => funnelNavigation.navigate('A')}
         />
       </FunnelStep>
-    </CoreFunnel>
+    </Funnel>
   );
-};
+});

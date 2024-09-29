@@ -16,13 +16,12 @@ export const FunnelStep = <Steps extends NonEmptyArray<string>>({
   onFocused,
 }: StepProps<Steps>) => {
   const isFocused = useIsFunnelFocused();
-
   const isFirstRender = useIsFirstRender();
-  if (isFirstRender) {
-    onMount?.();
-  }
 
   useEffect(() => {
+    if (isFirstRender) {
+      onMount?.();
+    }
     if (isFocused) {
       onFocused?.();
     }

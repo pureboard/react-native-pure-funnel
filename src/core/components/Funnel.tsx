@@ -11,27 +11,39 @@ import { Animated, StyleSheet, useWindowDimensions } from 'react-native';
 
 import type { NonEmptyArray } from '../types/NonEmptyArray';
 
-import type { StepProps } from '../components/FunnelStep';
-import { SwipeDetector } from '../components/SwipeDetector';
-import { FunnelStepProvider } from '../components/FunnelStepProvider';
-import { useFunnelContext } from './withFunnel';
+import type { StepProps } from './FunnelStep';
+import { SwipeDetector } from './SwipeDetector';
+import { FunnelStepProvider } from './FunnelStepProvider';
+import { useFunnelContext } from '../HOC/withFunnel';
 import { isIOS } from '../utils/platform';
 import { useNavigation } from '@react-navigation/native';
+import { useHeaderHeight } from '@react-navigation/elements';
 
 export interface FunnelProps<Steps extends NonEmptyArray<string>> {
+  /**
+   * only iOS. Whether it's possible to trigger funnel back navigation using swipe.
+   * @default true
+   */
   gestureEnabled?: boolean; // only iOS. default is true
+  /**
+   * only iOS. swipeEnabled in react-navigation. Used to determine whether to call navigation.goBack with a swipe when there is no further funnel to navigate back to.
+   * @default true
+   */
+  initialGestureEnabled?: boolean;
   children:
     | Array<ReactElement<StepProps<Steps>>>
     | ReactElement<StepProps<Steps>>;
-  headerHeight?: number;
+  extraHeight?: number;
 }
 
 export const Funnel = <Steps extends NonEmptyArray<string>>({
   children,
   gestureEnabled: _gestureEnabled = true,
-  headerHeight = 0,
+  initialGestureEnabled = true,
+  extraHeight = 0,
 }: FunnelProps<Steps>) => {
   const navigation = useNavigation();
+  const headerHeight = useHeaderHeight();
   const validChildren = Children.toArray(children).filter(
     isValidElement
   ) as Array<ReactElement<StepProps<Steps>>>;
@@ -80,7 +92,7 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
   }
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
 
-  const contentViewHeight = screenHeight - headerHeight;
+  const contentViewHeight = screenHeight - headerHeight - extraHeight;
 
   const prevFunnelSlideAnimation =
     transitionInterface?.slideAnimation?.interpolate({
@@ -96,7 +108,10 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
 
   useEffect(() => {
     navigation.setOptions({
-      gestureEnabled,
+      gestureEnabled:
+        (funnelStack || []).length <= 1
+          ? initialGestureEnabled
+          : !gestureEnabled, // the opposite of SwipeDetector gestureEnabled
     });
   }, [gestureEnabled]);
 

@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import { useBackHandler } from '../hooks/utils/useBackHandler';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { HeaderBackButton } from '../components/HeaderBackButton';
+import { HeaderBackButton } from '@react-navigation/elements';
 import { usePreservedCallback } from '../hooks/utils/usePreservedCallback';
 
 export const funnelSlideAnimationDuration = 250;
