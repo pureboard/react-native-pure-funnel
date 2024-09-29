@@ -15,6 +15,8 @@ import type { StepProps } from '../components/FunnelStep';
 import { SwipeDetector } from '../components/SwipeDetector';
 import { FunnelStepProvider } from '../components/FunnelStepProvider';
 import { useFunnelContext } from './withFunnel';
+import { isIOS } from '../utils/platform';
+import { useNavigation } from '@react-navigation/native';
 
 export interface FunnelProps<Steps extends NonEmptyArray<string>> {
   gestureEnabled?: boolean; // only iOS. default is true
@@ -29,12 +31,16 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
   gestureEnabled: _gestureEnabled = true,
   headerHeight = 0,
 }: FunnelProps<Steps>) => {
+  const navigation = useNavigation();
   const validChildren = Children.toArray(children).filter(
     isValidElement
   ) as Array<ReactElement<StepProps<Steps>>>;
 
-  const { funnelOptions, transitionInterface, funnelStack, funnelNavigation } =
+  const { transitionInterface, funnelStack, funnelNavigation } =
     useFunnelContext<Steps>();
+
+  const gestureEnabled =
+    isIOS && _gestureEnabled && (funnelStack ? funnelStack.length > 1 : true);
 
   const onSwipeEnd = (isSwiped: boolean) => {
     if (!isSwiped) {
@@ -88,10 +94,16 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
     }
   }, [funnelStack === null]);
 
+  useEffect(() => {
+    navigation.setOptions({
+      gestureEnabled,
+    });
+  }, [gestureEnabled]);
+
   return (
     <SwipeDetector
       onSwipeEnd={onSwipeEnd}
-      disabled={!funnelOptions?.gestureEnabled}
+      disabled={!gestureEnabled}
       onSwipe={({ deltaPageX }) =>
         transitionInterface?.slideAnimation?.setValue?.(deltaPageX)
       }

@@ -2,7 +2,6 @@ import React, {
   type ComponentType,
   forwardRef,
   useContext,
-  useEffect,
   useLayoutEffect,
   useState,
 } from 'react';
@@ -17,7 +16,6 @@ import {
 import { useBackHandler } from '../hooks/utils/useBackHandler';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { HeaderBackButton } from '../components/HeaderBackButton';
-import { isIOS } from '../utils/platform';
 import { usePreservedCallback } from '../hooks/utils/usePreservedCallback';
 
 export const funnelSlideAnimationDuration = 250;
@@ -29,10 +27,10 @@ interface FunnelNavigationOptions {
 interface FunnelOptions<Step> {
   initialStep?: Step | Step[];
   goBackAction?: () => void;
-  gestureEnabled?: boolean;
 }
 
 interface FunnelContext<Steps extends NonEmptyArray<string>> {
+  initFunnel: (steps: Steps, options?: FunnelOptions<Steps>) => void;
   transitionInterface?: {
     slideAnimation: Animated.Value;
     slideInAnimation: Animated.CompositeAnimation;
@@ -135,8 +133,9 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
     }, 0);
   };
 
-  const popStack = () =>
-    setFunnelStack((prev) => {
+  const popStack = () => {
+    setFunnelStack((_prev) => {
+      const prev = _prev === null ? initialStack : _prev;
       if (!prev) {
         return prev;
       }
@@ -147,9 +146,14 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
       newArray.pop();
       return newArray;
     });
+  };
 
-  const pushStack = (step: Step) =>
-    setFunnelStack((prev) => (prev ? [...prev, step] : prev));
+  const pushStack = (step: Step) => {
+    setFunnelStack((_prev) => {
+      const prev = _prev === null ? initialStack : _prev;
+      return prev ? [...prev, step] : prev;
+    });
+  };
 
   const goBack = usePreservedCallback(
     (navigateOptions?: FunnelNavigationOptions) => {
@@ -223,6 +227,7 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
       goBack(navigateOptions);
       return;
     }
+
     moveStep(step, navigateOptions);
   };
 
@@ -258,17 +263,6 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
     transitionInterface,
     funnelOptions,
   };
-
-  const gestureEnabled =
-    isIOS &&
-    funnelOptions.gestureEnabled &&
-    (funnelStack ? funnelStack.length > 1 : true);
-
-  useEffect(() => {
-    navigation.setOptions({
-      gestureEnabled,
-    });
-  }, [gestureEnabled]);
 
   useBackHandler({ onPressBackButton: goBack, isFocused });
 
