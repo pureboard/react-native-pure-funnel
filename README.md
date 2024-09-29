@@ -45,7 +45,7 @@ export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
   const headerHeight = useHeaderHeight();
 
-  const { funnelNavigation } = useFunnel<typeof steps>(steps, {
+  const { funnelNavigation } = useFunnel(steps, {
     goBackAction: navigation.goBack,
   });
 
