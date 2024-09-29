@@ -5,7 +5,6 @@ import {
 } from '@pureboard/react-native-pure-funnel';
 import { FunnelContent } from '../components/FunnelContent';
 import { useFunnel } from '../../../src/core/HOC/withFunnel';
-import { useEffect } from 'react';
 import {
   useFocusEffect,
   useIsFocused,
@@ -20,14 +19,10 @@ const steps = ['A', 'B', 'C'] as const;
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
-  const { initFunnel, funnelNavigation } = useFunnel<typeof steps>();
+  const { funnelNavigation } = useFunnel<typeof steps>(steps, {
+    goBackAction: navigation.goBack,
+  });
   const headerHeight = useHeaderHeight();
-
-  useEffect(() => {
-    initFunnel(steps, {
-      goBackAction: navigation.goBack,
-    });
-  }, []);
 
   const goBackFunnel = usePreservedCallback(() => {
     funnelNavigation.goBack();

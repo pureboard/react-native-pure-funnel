@@ -2,6 +2,7 @@ import React, {
   type ComponentType,
   forwardRef,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import type { NonEmptyArray } from '../types/NonEmptyArray';
@@ -25,7 +26,12 @@ interface FunnelOptions<Step> {
 }
 
 interface FunnelContext<Steps extends NonEmptyArray<string>> {
-  initFunnel: (steps: Steps, options?: FunnelOptions<Steps>) => void;
+  initFunnel: (
+    steps: Steps,
+    options?: FunnelOptions<
+      ArrayElement<Steps> extends string ? ArrayElement<Steps> : any
+    >
+  ) => void;
   transitionInterface?: {
     slideAnimation: Animated.Value;
     slideInAnimation: Animated.CompositeAnimation;
@@ -62,8 +68,23 @@ interface FunnelContext<Steps extends NonEmptyArray<string>> {
 }
 
 const FunnelContext = React.createContext<FunnelContext<any> | null>(null);
-export const useFunnel = <Steps extends NonEmptyArray<string>>() => {
-  return useContext(FunnelContext) as FunnelContext<Steps>;
+export const useFunnel = <Steps extends NonEmptyArray<string>>(
+  steps?: Steps,
+  options?: FunnelOptions<ArrayElement<Steps>>
+) => {
+  const { initFunnel, ...funnelContext } = useContext(
+    FunnelContext
+  ) as FunnelContext<Steps>;
+
+  const isReady = funnelContext.funnelStack !== null;
+  const stepsDeps = JSON.stringify(steps);
+  useEffect(() => {
+    if (!isReady && !!steps) {
+      initFunnel(steps, options);
+    }
+  }, [isReady, stepsDeps]);
+
+  return funnelContext;
 };
 
 const FunnelProvider = <Steps extends NonEmptyArray<string>>({
@@ -90,13 +111,7 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
 
   const funnelStack = _funnelStack || initialStack;
 
-  const initFunnel = (
-    steps: Steps,
-    options?: {
-      initialStep?: Step | Step[];
-      goBackAction?: () => void;
-    }
-  ) => {
+  const initFunnel = (steps: Steps, options?: FunnelOptions<Step>) => {
     setFunnelOptions(options || {});
     setFunnelSteps(steps);
   };
