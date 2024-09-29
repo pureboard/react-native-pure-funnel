@@ -9,7 +9,11 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name={'funnel'} component={FunnelScreen} />
+          <Stack.Screen
+            name={'funnel'}
+            component={FunnelScreen}
+            options={{ gestureEnabled: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </View>

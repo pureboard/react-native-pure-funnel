@@ -6,13 +6,20 @@ import {
 import { FunnelContent } from '../components/FunnelContent';
 import { useFunnelContext } from '../../../src/core/HOC/withFunnel';
 import { useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import { HeaderBackButton, useHeaderHeight } from '@react-navigation/elements';
+import { usePreservedCallback } from '../hooks/usePreservedCallback';
+import { useBackHandler } from '../hooks/useBackHandler';
 
 const steps = ['A', 'B', 'C'] as const;
 
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const { initFunnel, funnelNavigation } = useFunnelContext<typeof steps>();
   const headerHeight = useHeaderHeight();
 
@@ -21,6 +28,19 @@ export const FunnelScreen = withFunnel(() => {
       goBackAction: navigation.goBack,
     });
   }, []);
+
+  const goBackFunnel = usePreservedCallback(() => {
+    funnelNavigation.goBack();
+    return true;
+  });
+  useBackHandler({ onPressBackButton: goBackFunnel, isFocused });
+  useFocusEffect(
+    usePreservedCallback(() => {
+      navigation.setOptions({
+        headerLeft: () => <HeaderBackButton onPress={goBackFunnel} />,
+      });
+    })
+  );
 
   return (
     <Funnel<typeof steps> extraHeight={headerHeight}>
