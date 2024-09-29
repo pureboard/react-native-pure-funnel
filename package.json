@@ -1,6 +1,6 @@
 {
   "name": "@pureboard/react-native-pure-funnel",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "easy handling funnel in react native",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
