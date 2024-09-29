@@ -6,6 +6,8 @@ This library was inspired by Toss's useFunnel and is designed for use in React N
 
 ref. [toss slash useFunnel](https://www.slash.page/ko/libraries/react/use-funnel/README.i18n), [useFunnel youtube](https://www.youtube.com/watch?v=NwLWX2RNVcw)
 
+![react-native-pure-funnel](./funnel_example.gif)
+
 ## Installation
 
 ```sh
@@ -44,7 +46,7 @@ export const FunnelScreen = withFunnel(() => {
   const headerHeight = useHeaderHeight();
 
   const { initFunnel, funnelNavigation } = useFunnel<typeof steps>();
-  
+
   useEffect(() => {
     initFunnel(steps, {
       goBackAction: navigation.goBack,
@@ -77,9 +79,9 @@ export const FunnelScreen = withFunnel(() => {
 Initializes the funnel with the specified steps.
 (The Funnel is not rendered on the screen until the initialization code is called.)
 
-`steps`: An array of steps that represent the funnel stages.   
-`options (optional)`: Configuration for the funnel:   
-- initialStep: The step or steps to start the funnel from.   
+`steps`: An array of steps that represent the funnel stages.
+`options (optional)`: Configuration for the funnel:
+- initialStep: The step or steps to start the funnel from.
 - goBackAction: This is executed when the length of the funnelStack is 1 or less, and no more funnels can be popped.
 
 ### Funnel Navigation API
