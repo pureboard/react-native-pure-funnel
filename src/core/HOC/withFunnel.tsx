@@ -136,11 +136,8 @@ const FunnelProvider = <Steps extends NonEmptyArray<string>>({
   });
 
   const startSlideInAnimation = () => {
-    // 화면 stack 전환과 애니메이션을 동시에 호출하면 특정 케이스에서 애니메이션이 동작하지 않는 이슈 대응을 위해 setTimeout으로 우선순위 낮춤
-    setTimeout(() => {
-      slideAnimation.setValue(screenWidth);
-      slideInAnimation.start();
-    }, 0);
+    slideAnimation.setValue(screenWidth);
+    slideInAnimation.start();
   };
 
   const popStack = () => {
