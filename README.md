@@ -23,7 +23,7 @@ how to use `react-native-pure-funnel`
 3. Import useFunnel and initialize it by passing steps and options (optional) as parameters.
 4. You can handle funnel transitions using `funnelNavigation`.
 5. Configure the Android back button and the react-navigation header appropriately (using funnelNavigation.goBack).
-6. Each funnel step has the default dimensions of the `viewport’s screenWidth and screenHeight`. If you're using react-navigation's stack navigator, pass the `headerHeight` to the Funnel as `extraHeight` prop.
+6. Each funnel step has the default dimensions of the `viewport’s screenWidth and screenHeight`.
 7. For more details, refer to the usage code below or the example app in the repository.
 
 ```tsx
@@ -36,21 +36,19 @@ import {
 import {
   useNavigation,
 } from '@react-navigation/native';
-import { useHeaderHeight } from '@react-navigation/elements';
 
 const steps = ['A', 'B', 'C'] as const;
 
 // you must wrap your component with `withFunnel` HOC
 export const FunnelScreen = withFunnel(() => {
   const navigation = useNavigation();
-  const headerHeight = useHeaderHeight();
 
   const { funnelNavigation } = useFunnel(steps, {
     goBackAction: navigation.goBack,
   });
 
   return (
-    <Funnel<typeof steps> extraHeight={headerHeight}>
+    <Funnel<typeof steps>>
       <FunnelStep name={'A'}>
         {/* A funnel content*/}
         <View>
@@ -129,11 +127,6 @@ The Funnel component is used to manage step-based navigation flows, allowing use
 `Default`: true
 `Description`: Determines whether it's possible to trigger funnel back navigation using swipe gestures. This is an iOS-only feature.
 `Usage`: When set to true, users can swipe to go back within the funnel if a previous step exists. If set to false, swipe gestures will be disabled.
-
-### extraHeight
-`Type`: number
-`Default`: 0
-`Description`: Specifies additional height to be added to the funnel’s viewport. This can be useful when using react-navigation's stack navigator because each funnel step has the default dimensions of the `viewport’s screenWidth and screenHeight. you can pass headerHeight to extraHeight.
 
 ## FunnelStep Component
 The FunnelStep component represents an individual step within a funnel flow. Each step is defined with a name and can trigger specific lifecycle events when mounted or focused. This component is used as a child of the Funnel component to manage and structure different steps in the funnel.
