@@ -18,13 +18,11 @@ export interface FunnelProps<Steps extends NonEmptyArray<string>> {
   children:
     | Array<ReactElement<StepProps<Steps>>>
     | ReactElement<StepProps<Steps>>;
-  extraHeight?: number;
 }
 
 export const Funnel = <Steps extends NonEmptyArray<string>>({
   children,
   gestureEnabled: _gestureEnabled = true,
-  extraHeight = 0,
 }: FunnelProps<Steps>) => {
   const validChildren = Children.toArray(children).filter(
     isValidElement
@@ -46,9 +44,7 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
     funnelNavigation.goBack({ animated: transitionEnabled });
   };
 
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-
-  const contentViewHeight = screenHeight - extraHeight;
+  const { width: screenWidth } = useWindowDimensions();
 
   const prevFunnelSlideAnimation =
     transitionInterface?.slideAnimation?.interpolate({
@@ -84,7 +80,6 @@ export const Funnel = <Steps extends NonEmptyArray<string>>({
                 styles.funnelContainer,
                 {
                   width: screenWidth,
-                  height: contentViewHeight,
                   transform: [
                     {
                       translateX,
@@ -109,6 +104,7 @@ const styles = StyleSheet.create({
   funnelContainer: {
     backgroundColor: 'white',
     position: 'absolute',
+    height: '100%',
   },
   visible: {
     display: 'flex',
